@@ -110,6 +110,16 @@ function filter_context(dict, text, window, word)
     return vcat(left_context, right_context)
 end
 
+function parse_model_name(model_name)
+"""
+    Obtains parameters from model name, assuming specific format:
+
+                adagramWXXDXXXEXXMXXAXXXWXRXX
+"""
+    return split(model_name, r"[a-zA-Z]", keep=false)
+
+end
+
 function evaluate_model(local_model, window, SCWS_PATH)
 """
     Evaluates the given model using a context of size window
@@ -150,16 +160,22 @@ function evaluate_model(local_model, window, SCWS_PATH)
         push!(similarities_GS, entry[8])
     end
 
+    spearman_Avg = corspearman(Avg_list, similarities_GS)
+    spearman_Max = corspearman(Max_list, similarities_GS)
+    spearman_AvgC = corspearman(AvgC_list, similarities_GS)
+    spearman_MaxC = corspearman(MaxC_list, similarities_GS)
+
     println("--------------------------------------------")
     println("Processed pairs: ", length(Avg_list))
     println("--------------------------------------------")
-    println("Spearman's coeff for AvgSim: ", corspearman(Avg_list, similarities_GS))
-    println("Spearman's coeff for MaxSim: ", corspearman(Max_list, similarities_GS))
-    println("Spearman's coeff for AvgSimC: ", corspearman(AvgC_list, similarities_GS))
-    println("Spearman's coeff for MaxSimC: ", corspearman(MaxC_list, similarities_GS))
+    println("Spearman's coeff for AvgSim: ", spearman_Avg)
+    println("Spearman's coeff for MaxSim: ", spearman_Max)
+    println("Spearman's coeff for AvgSimC: ", spearman_AvgC)
+    println("Spearman's coeff for MaxSimC: ", spearman_MaxC)
     println("--------------------------------------------")
-end
 
+    return spearman_Avg, spearman_Max, spearman_AvgC, spearman_MaxC
+end
 
 using ArgParse
 using AdaGram
@@ -185,6 +201,8 @@ SCWS_PATH = "/home/andres/SCWS_dataset/ratings_unquoted.txt"
 win = args["window"]
 model = args["model"]
 temp_folder = "temp_folder"
+print_table = true
+table_filename = "SCWS_table.dat"
 
 # if model is single file, copy it in a temp folder
 if !isdir(model)
@@ -196,9 +214,23 @@ if !isdir(model)
     model = temp_folder
 end
 
+if print_table:
+    ft = open(table_filename, "w")
+    write(ft, "### WO D E M A W R AvgSim MaxSim AvgSimC MaxSimC\n")
+end
+
 for curr_model in readdir(model)
     println("Evaluating model: " * curr_model)
-    evaluate_model(model * "/" * curr_model, win, SCWS_PATH)
+    results = evaluate_model(model * "/" * curr_model, win, SCWS_PATH)
+    if print_table:
+        params = parse_model_name(curr_model)
+        #print params and results to table
+        writedlm(ft, hcat(transpose(params), transpose(results)))
+    end
+end
+
+if print_table:
+    close(ft)
 end
 
 # if temp folder was created, delete it
