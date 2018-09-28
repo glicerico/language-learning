@@ -214,7 +214,7 @@ if !isdir(model)
     model = temp_folder
 end
 
-if print_table:
+if print_table
     ft = open(table_filename, "w")
     write(ft, "### WO D E M A W R AvgSim MaxSim AvgSimC MaxSimC\n")
 end
@@ -222,14 +222,14 @@ end
 for curr_model in readdir(model)
     println("Evaluating model: " * curr_model)
     results = evaluate_model(model * "/" * curr_model, win, SCWS_PATH)
-    if print_table:
+    if print_table
         params = parse_model_name(curr_model)
         #print params and results to table
         writedlm(ft, hcat(transpose(params), transpose(results)))
     end
 end
 
-if print_table:
+if print_table
     close(ft)
 end
 
