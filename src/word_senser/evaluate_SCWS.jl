@@ -197,7 +197,7 @@ end
 args = parse_args(ARGS, s)
 
 #SCWS_PATH = "/home/andres/SCWS_dataset/test"
-SCWS_PATH = "/home/andres/SCWS_dataset/ratings_unquoted.txt"
+SCWS_PATH = "/home/asuarez/SCWS_dataset/ratings_unquoted.txt"
 win = args["window"]
 model = args["model"]
 temp_folder = "temp_folder"
@@ -237,3 +237,4 @@ end
 if isdir(temp_folder)
     rm(temp_folder, recursive=true)
 end
+
