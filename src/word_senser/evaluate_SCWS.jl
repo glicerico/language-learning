@@ -122,7 +122,10 @@ end
 
 function evaluate_model(local_model, window, SCWS_PATH)
 """
-    Evaluates the given model using a context of size window
+    Evaluates the given model using a context of size window.
+    Returns Spearman correlation coefficients for AvgSim,
+    MaxSim, AvgSimC and MaxSimC. Also number of processed pairs
+    from SCWS.
 """
 
     data = load_SCWS(SCWS_PATH)
@@ -160,13 +163,14 @@ function evaluate_model(local_model, window, SCWS_PATH)
         push!(similarities_GS, entry[8])
     end
 
+    processed_pairs = length(Avg_list)
     spearman_Avg = corspearman(Avg_list, similarities_GS)
     spearman_Max = corspearman(Max_list, similarities_GS)
     spearman_AvgC = corspearman(AvgC_list, similarities_GS)
     spearman_MaxC = corspearman(MaxC_list, similarities_GS)
 
     println("--------------------------------------------")
-    println("Processed pairs: ", length(Avg_list))
+    println("Processed pairs: ", processed_pairs)
     println("--------------------------------------------")
     println("Spearman's coeff for AvgSim: ", spearman_Avg)
     println("Spearman's coeff for MaxSim: ", spearman_Max)
@@ -174,7 +178,7 @@ function evaluate_model(local_model, window, SCWS_PATH)
     println("Spearman's coeff for MaxSimC: ", spearman_MaxC)
     println("--------------------------------------------")
 
-    return spearman_Avg, spearman_Max, spearman_AvgC, spearman_MaxC
+    return processed_pairs, spearman_Avg, spearman_Max, spearman_AvgC, spearman_MaxC
 end
 
 using ArgParse
@@ -216,7 +220,7 @@ end
 
 if print_table
     ft = open(table_filename, "w")
-    write(ft, "### WO D E M A W R AvgSim MaxSim AvgSimC MaxSimC\n")
+    write(ft, "### WO D E M A W R #pairs AvgSim MaxSim AvgSimC MaxSimC\n")
 end
 
 for curr_model in readdir(model)
@@ -225,7 +229,7 @@ for curr_model in readdir(model)
     if print_table
         params = parse_model_name(curr_model)
         #print params and results to table
-        writedlm(ft, [transpose(params) results[1] results[2] results[3] results[4]])
+        writedlm(ft, [transpose(params) results[1] results[2] results[3] results[4] results[5]])
     end
 end
 
