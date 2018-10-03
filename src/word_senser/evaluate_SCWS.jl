@@ -225,7 +225,7 @@ for curr_model in readdir(model)
     if print_table
         params = parse_model_name(curr_model)
         #print params and results to table
-        writedlm(ft, hcat(transpose(params), transpose(results)))
+        writedlm(ft, [transpose(params) results[1] results[2] results[3] results[4]])
     end
 end
 
