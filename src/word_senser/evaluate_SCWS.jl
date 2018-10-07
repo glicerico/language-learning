@@ -1,6 +1,8 @@
 # ASuMa Sept, 2018
 # This script takes an AdaGram model and evalautes 4 similarity measures
-# using the SCWS dataset (Huang et al. 2012)
+# using the SCWS dataset (Huang et al. 2012).
+# Outputs a tab-separated file with format
+# ### WO D E M A W R #pairs AvgSim MaxSim AvgSimC MaxSimC
 
 # usage:
 #   evaluate_SCWS.sh model(file or dir) 
