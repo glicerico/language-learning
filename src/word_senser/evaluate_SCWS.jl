@@ -40,10 +40,14 @@ function evaluate_entry(vm, dict, word1, word2, context1, context2; min_prob=1e-
     # AvgSimC & MaxSimC (context taken into account)
     similarities = []
     similaritiesC = []
+    senses_w1 = 0
+    senses_w2 = 0
     for s1 in 1:T(vm)
         if priors1[s1] > min_prob
+            senses_w1 += 1
             for s2 in 1:T(vm)
                 if priors2[s2] > min_prob
+                    senses_w2 += 1
                     sim = similarity(vm, dict, word1, s1, word2, s2)
                     push!(similarities, sim)
                     push!(similaritiesC, sim * posteriors1[s1] * posteriors2[s2])
@@ -53,7 +57,7 @@ function evaluate_entry(vm, dict, word1, word2, context1, context2; min_prob=1e-
     end
     AvgSim = mean(similarities)
     MaxSim = maximum(similarities)
-    AvgSimC = sum(similaritiesC)
+    AvgSimC = 1 / senses_w1 * 1/ senses_w2 * sum(similaritiesC)
 
     best_sense1 = findmax(posteriors1)[2]
     best_sense2 = findmax(posteriors2)[2]
@@ -150,6 +154,10 @@ function evaluate_model(local_model, window, SCWS_PATH)
 
         context1 = filter_context(dict, text1, window, word1)
         context2 = filter_context(dict, text2, window, word2)
+	#println(word1)
+	#println(context1)
+	#println(word2)
+	#println(context2)
         if length(context1) == 0 || length(context2) == 0
             println("Context invalid for entry id: ", i)
             continue
