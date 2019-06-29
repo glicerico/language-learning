@@ -1,4 +1,4 @@
-name: ull
+name: ull-test
 channels:
   - conda-forge
   - defaults
