@@ -8,7 +8,8 @@
 * Matplotlib
 
 ## Download source code  
-Fork https://github.com/singnet/language-learning.git to your_repo  
+Fork https://github.com/singnet/language-learning.git to your_repo,
+then clone to your system:
 ```
 $ git clone https://github.com/your_repo/language-learning.git
 ```
