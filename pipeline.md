@@ -41,13 +41,13 @@ dictionaries. Each component dictionary section should have the following parame
 `component` is the string name of one of the available pipeline components. This parameter is 
 mandatory.
 
+`common-parameters` is a dictionary of zero or many parameters common for all configurations of 
+the specified component. It may be ommitted if unnecessary.
+
 `specific-parameters` is a list of dictionaries, where each dictionary specifies unique configuration
 of the specified component. Pipeline script executes specified component as many times as the number 
 of dictionaries in the list.
  
-`common-parameters` is a dictionary of zero or many parameters common for all configurations of 
-the specified component. It may be ommitted if unnecessary.
-
 Each component code is executed as many times as the length of `specific-parameters` list. Each 
 successive component followes the execution path of the previous one. If the previous component
 has multiple execution paths specified by the `specific-parameters` section, each path is folloed
@@ -108,7 +108,7 @@ adding `"skip_configuration": true` parameter into configuration you want to ski
 |input_grammar| string | Path to `.dict` file to be tested          | Any valid path |
 |input_corpus | string | Path to corpus file or directory           | Any valid path |
 |template_path| string | Path to a valid Link Grammar dictionary to be used as a template when creating new dictionary with generated `.dict` file | Any valid path |
-|grammar_root | string | Path to a directory new dictionary will be created in | Any valid path |
+|grammar_root | string | Path to directory where new dictionary will be created | Any valid path |
 |output_path  | string | Path to store output parse and statistics files | Any valid path | 
 |ref_path     | string | Path to a single reference file, or directory | Any valid path |
 |parse_format | string | Type of parse output | ull, diagram, postscript, constituent_tree |
